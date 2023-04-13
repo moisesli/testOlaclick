@@ -13,7 +13,8 @@
       <v-row class="mt-2 mx-1">
         <v-col cols="9">
           <v-text-field
-            v-model="newTask"
+            v-model="inputTask"
+            @keyup.enter="addTask"
             clearable
             label="Input Task"
             type="text"
@@ -60,17 +61,9 @@
           </div>
         </v-col>
         <v-col cols="4" class="d-flex align-center">
-          <!--          <v-btn icon elevation="0" @click="openEditModal(item)">-->
-          <!--            <v-icon class="text-amber-darken-1"-->
-          <!--              >mdi mdi-book-edit-outline-->
-          <!--            </v-icon>-->
-          <!--          </v-btn>-->
-          <!--          <v-btn icon elevation="0" @click="openDeleteModal(item)">-->
-          <!--            <v-icon class="text-red-darken-1">mdi-trash-can</v-icon>-->
-          <!--          </v-btn>-->
           <task-done :task="item" :tasks="tasks" class="mr-1" />
-          <modal-edit :task="item" :tasks="tasks" class="mr-1" />
-          <modal-delete :task="item" :tasks="tasks" />
+          <modal-task-edit :task="item" :tasks="tasks" class="mr-1" />
+          <modal-task-delete :task="item" :tasks="tasks" />
         </v-col>
       </v-row>
     </v-card>
@@ -79,24 +72,22 @@
 
 <script>
 import taskDone from '@/components/taskDone.vue';
-import modalDelete from '@/components/modalDelete.vue';
-import modalEdit from '@/components/modalEdit.vue';
+import modalTaskDelete from '@/components/modalTaskDelete.vue';
+import modalTaskEdit from '@/components/modalTaskEdit.vue';
 
 export default {
-  name: 'homeHome',
+  name: 'taskList',
   components: {
     taskDone,
-    modalDelete,
-    modalEdit,
+    modalTaskDelete,
+    modalTaskEdit,
   },
   data() {
     return {
-      newTask: '',
+      inputTask: '',
       tasks: [],
-      statusDeleteModal: false,
-      statusEditModal: false,
-      deleteItem: {},
-      editItem: {},
+      showModalDelete: false,
+      showModalEdit: false,
     };
   },
   methods: {
@@ -116,52 +107,19 @@ export default {
     // add a new task
     addTask() {
       this.tasks.unshift({
-        title: 'Task #',
-        subtitle: this.newTask,
+        title: 'Task #' + Math.floor(Math.random() * 10000),
+        subtitle: this.inputTask,
         done: false,
       });
+      this.inputTask = '';
       this.updateTasksLocalstorage(this.tasks);
-      // console.log(this.newTask, this.tasks);
-      // console.log(this.newTask);
-      // this.tasks.unshift({
-      //   title: 'Task #' + Math.floor(Math.random() * 10000),
-      //   subtitle: this.newTask,
-      //   done: false,
-      // });
-      //
-      // this.newTask =
-      //   'A simple todo list built with Vue.js 2.0 that saves your todo items in the LocalStorage.';
-      // return true;
-    },
-    openDeleteModal(item) {
-      this.deleteItem = item;
-      this.statusDeleteModal = true;
-    },
-    openEditModal(item) {
-      this.statusEditModal = true;
-      this.editItem = item;
-      // console.log(item)
     },
     deleteTask() {
-      console.log(this.deleteItem);
+      // console.log(this.deleteItem);
       this.tasks.splice(this.tasks.indexOf(this.deleteItem), 1);
-      this.statusDeleteModal = false;
+      this.showModalDelete = false;
       this.deleteItem = {};
     },
-    toggleTask: function (item) {
-      item.done = !item.done;
-      this.tasks.splice(this.tasks.indexOf(item), 1, item);
-      this.updateTasksLocalstorage(this.tasks);
-    },
-  },
-  watch: {
-    // tasks: {
-    //   // handler: function (updatedList) {
-    //   //   console.log(JSON.stringify(updatedList));
-    //   //   localStorage.setItem('task_list', JSON.stringify(updatedList));
-    //   // },
-    //   // deep: true,
-    // },
   },
   mounted() {
     this.getTasks();

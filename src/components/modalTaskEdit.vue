@@ -5,11 +5,11 @@
       color="primary lighten-2"
       dark
       size="small"
-      @click="dialog = true"
+      @click="showModalEdit = true"
     >
       <v-icon>mdi mdi-book-edit-outline</v-icon>
     </v-btn>
-    <v-dialog v-model="dialog" width="500">
+    <v-dialog v-model="showModalEdit" width="500">
       <v-card>
         <v-toolbar color="primary" dark>
           <v-toolbar-title>
@@ -21,7 +21,7 @@
             </div>
           </v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-btn icon @click="dialog = false">
+          <v-btn icon @click="showModalEdit = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
         </v-toolbar>
@@ -54,7 +54,7 @@
 </template>
 <script>
 export default {
-  name: 'modalEdit',
+  name: 'modalTaskEdit',
   props: {
     task: {
       type: Object,
@@ -65,7 +65,7 @@ export default {
   },
   data() {
     return {
-      dialog: false,
+      showModalEdit: false,
     };
   },
   methods: {
@@ -73,7 +73,7 @@ export default {
       // eslint-disable-next-line vue/no-mutating-props
       this.tasks.splice(this.tasks.indexOf(this.task), 1, this.task);
       localStorage.setItem('tasks', JSON.stringify(this.tasks));
-      this.dialog = false;
+      this.showModalEdit = false;
     },
   },
 };

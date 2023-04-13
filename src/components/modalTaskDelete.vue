@@ -4,16 +4,16 @@
     color="warning lighten-2"
     size="small"
     dark
-    @click="dialog = true"
+    @click="showModalDelete = true"
   >
     <v-icon>mdi-trash-can</v-icon>
   </v-btn>
-  <v-dialog v-model="dialog" width="480">
+  <v-dialog v-model="showModalDelete" width="480">
     <v-card>
       <v-toolbar color="grey-lighten-5">
         <v-toolbar-title>{{ $t('delete') }}</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-btn icon @click="dialog = false">
+        <v-btn icon @click="showModalDelete = false">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-toolbar>
@@ -31,7 +31,7 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn variant="flat" @click="dialog = false">
+        <v-btn variant="flat" @click="showModalDelete = false">
           {{ $t('delete_button_close') }}
         </v-btn>
         <v-btn variant="tonal" color="red" @click="deleteTask">
@@ -44,7 +44,7 @@
 </template>
 <script>
 export default {
-  name: 'modalDelete',
+  name: 'modalTaskDelete',
   props: {
     task: {
       type: Object,
@@ -55,7 +55,7 @@ export default {
   },
   data() {
     return {
-      dialog: false,
+      showModalDelete: false,
     };
   },
   methods: {
@@ -63,7 +63,7 @@ export default {
       // eslint-disable-next-line vue/no-mutating-props
       this.tasks.splice(this.tasks.indexOf(this.task), 1);
       localStorage.setItem('tasks', JSON.stringify(this.tasks));
-      this.dialog = false;
+      this.showModalDelete = false;
     },
   },
 };
